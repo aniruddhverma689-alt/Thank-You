@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>A Small Experience ✨</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: radial-gradient(circle at top, #1a2634, #050608);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        /* light follow */
+        .light {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 77, 109, .25), transparent 70%);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: .1s;
+        }
+
+        /* stars */
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            opacity: .7;
+            animation: twinkle 4s infinite;
+        }
+
+        @keyframes twinkle {
+            50% {
+                opacity: .2
+            }
+        }
+
+        /* card */
+        .card {
+            position: relative;
+            width: 380px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, .7);
+            text-align: center;
+            animation: enter 1.2s cubic-bezier(.2, .8, .2, 1);
+        }
+
+        @keyframes enter {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 16px;
+        }
+
+        #text {
+            min-height: 80px;
+            font-size: 16px;
+            line-height: 1.7;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: .6s ease;
+        }
+
+        #text.show {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* button */
+        button {
+            margin-top: 30px;
+            padding: 12px 38px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #ff4d6d, #ff7a8f);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 77, 109, .4);
+            transition: .4s;
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        button.hide {
+            opacity: 0;
+            transform: scale(.8);
+            pointer-events: none;
+        }
+
+        /* hearts */
+        .heart {
+            position: absolute;
+            font-size: 18px;
+            color: #ff4d6d;
+            animation: floatUp 3s ease forwards;
+        }
+
+        @keyframes floatUp {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(-120px) scale(1.5);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="light" id="light"></div>
+
+    <div class="card">
+        <h1>Hey 👋</h1>
+        <div id="text"></div>
+        <button id="btn">Continue ✨</button>
+    </div>
+
+    <!-- ambient music -->
+    <audio id="music" loop>
+        <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_6c2b71d1bb.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        /* messages */
+        const messages = [
+            "This wasn’t made to impress.",
+            "It was made with intention.",
+            "I know you are very serious about your studies.",
+            "But I am always there for you.",
+            "Not in your happy moments but",
+            "In your hard times I am Always there",
+            "And thank you for",
+            "Being Cure for my Anxiety,Panic Attacks And Hypertention ✨",
+            "I will never forget you in my life",
+            "Thank You Vaishnavi",
+            "I hope this Messege make your day feel better",
+
+        ];
+
+        let i = 0;
+        const text = document.getElementById("text");
+        const btn = document.getElementById("btn");
+        const music = document.getElementById("music");
+
+        /* type effect */
+        function typeLine(line) {
+            text.innerHTML = "";
+            text.classList.remove("show");
+            let c = 0;
+            const t = setInterval(() => {
+                text.innerHTML += line.charAt(c);
+                c++;
+                if (c === line.length) {
+                    clearInterval(t);
+                    setTimeout(() => text.classList.add("show"), 80);
+                }
+            }, 45);
+        }
+
+        typeLine(messages[i]);
+
+        btn.onclick = () => {
+            if (music.paused) {
+                music.volume = 0;
+                music.play();
+                let v = 0;
+                const fade = setInterval(() => {
+                    v += 0.02;
+                    music.volume = Math.min(v, 0.4);
+                    if (v >= 0.4) clearInterval(fade);
+                }, 100);
+            }
+
+            i++;
+            if (i < messages.length) {
+                typeLine(messages[i]);
+            } else {
+                btn.classList.add("hide");
+                finalHearts();
+            }
+        };
+
+        /* stars */
+        for (let s = 0; s < 90; s++) {
+            const star = document.createElement("div");
+            star.className = "star";
+            star.style.left = Math.random() * 100 + "vw";
+            star.style.top = Math.random() * 100 + "vh";
+            star.style.animationDelay = Math.random() * 4 + "s";
+            document.body.appendChild(star);
+        }
+
+        /* light follow */
+        const light = document.getElementById("light");
+        document.addEventListener("mousemove", e => {
+            light.style.left = e.clientX + "px";
+            light.style.top = e.clientY + "px";
+        });
+        document.addEventListener("touchmove", e => {
+            light.style.left = e.touches[0].clientX + "px";
+            light.style.top = e.touches[0].clientY + "px";
+        });
+
+        /* hearts at end */
+        function finalHearts() {
+            setInterval(() => {
+                const h = document.createElement("div");
+                h.className = "heart";
+                h.innerHTML = "❤";
+                h.style.left = (50 + (Math.random() * 100 - 50)) + "px";
+                h.style.bottom = "120px";
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 3000);
+            }, 300);
+        }
+    </script>
+
+</body>
+
+</html>
